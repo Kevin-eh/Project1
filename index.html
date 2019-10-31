@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <title>Project 1</title>
+    <style>
+        .spell-name {
+            font-family: Helvetica, sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        p {
+            font-family: Helvetica, sans-serif;
+            font-size: 12px;
+        }
+
+        h2 {
+            font-family: Helvetica, sans-serif;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form>
+        <div class="form-group">
+            <label for="class-search">Get Spells by</label>
+            <select id="query-selector">
+                <option class="query-option" data-option='spells/'> By Class</option>
+                <option class="query-option" data-option='spells/?name='>By Spell</option>
+            </select>
+            <input type=" text" placeholder="Search Query" id="class-search" />
+            <!-- <label for=" class-search">Level</label>
+            <select id="level-search">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+                <option>13</option>
+                <option>14</option>
+                <option>15</option>
+                <option>16</option>
+                <option>17</option>
+                <option>18</option>
+                <option>19</option>
+                <option>20</option>
+            </select> -->
+            <button type="submit" id="submit-button">Search</button>
+            <button>Spell List</button>
+            <button>Class List</button>
+        </div>
+        <div id="results-display">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Spell Name</th>
+                    </tr>
+                    <thead>
+                    <tbody>
+                    </tbody>
+
+            </table>
+
+        </div>
+    </form>
+
+
+    <script src="javascript.js">
+
+    </script>
+</body>
+
+</html>

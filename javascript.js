@@ -132,23 +132,25 @@ $(document).on("click", ".spell-name", function () {
         method: "GET"
     }).then(function (response) {
         console.log(response);
-        var spellDiv = $("<div>").addClass("spell-div");
+        var spellDiv = $("<div>").addClass("spell-div card");
+        var cardBody = $("<div>").addClass("card-body")
         var classLoop = [];
         response.classes.forEach(element => {
             return classLoop.push(element.name);
         });
         $("#results-display").append(spellDiv);
-        $(spellDiv).append("<h2>" + response.name + "</h2>");
-        $(spellDiv).append("<p> Range: " + response.range + "</p>");
-        $(spellDiv).append("<p> Components: " + response.components + "</p>");
-        $(spellDiv).append("<p> Description: " + response.desc + "</p>");
+        $(spellDiv).append(cardBody);
+        $(cardBody).append("<h5>" + response.name + "</h5>").addClass("card-title");
+        $(cardBody).append("<p> Range: " + response.range + "</p>").addClass("card-subtitle mb-2 text-muted");
+        $(cardBody).append("<p> Components: " + response.components + "</p>");
+        $(cardBody).append("<p> Description: " + response.desc + "</p>");
         if (response.higher_level) {
-            $(spellDiv).append("<p>" + response.higher_level + "</p>");
+            $(cardBody).append("<p>" + response.higher_level + "</p>");
         }
-        $(spellDiv).append("<p> Ritual: " + response.ritual + "</p>");
-        $(spellDiv).append("<p> Duration: " + response.duration + "</p>");
-        $(spellDiv).append("<p> Casting Time: " + response.casting_time + "</p>");
-        $(spellDiv).append("<p>" + classLoop.join(', ') + "</p>")
+        $(cardBody).append("<p> Ritual: " + response.ritual + "</p>");
+        $(cardBody).append("<p> Duration: " + response.duration + "</p>");
+        $(cardBody).append("<p> Casting Time: " + response.casting_time + "</p>");
+        $(cardBody).append("<p>" + classLoop.join(', ') + "</p>")
         console.log(classLoop);
 
     });

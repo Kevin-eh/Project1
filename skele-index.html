@@ -100,6 +100,12 @@
             color: white;
             font-family: 'Stoke', serif;
         }
+
+        select {
+            background-color: indianred;
+            color: white;
+            font-family: 'Stoke', serif;
+        }
     </style>
 </head>
 
@@ -112,27 +118,29 @@
                 <div class="form-group">
                     <label for="class-search">Get Spells by</label>
                     <select id="query-selector">
-                        <option class="query-option" data-option='spells/'> By Class</option>
-                        <option class="query-option" data-option='spells/?name='>By Spell</option>
+                        <option class="query-option" data-option='spells/'>Class</option>
+                        <option class="query-option" data-option='spells/?name='>Spell Name</option>
                     </select>
                     <input type=" text" placeholder="Search Query" id="class-search" />
                     <button type="submit" id="submit-button">Search</button>
-                    <button>Spell List</button>
-                    <button>Class List</button>
+                    <button id="spell-list">Spell List</button>
+                    <button id="class-list">Class List</button>
                 </div>
             </form>
         </nav>
-        <table class="table table-striped table-dark">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Spell Name</th>
-                    <th scope="col">Classes</th>
-                    <th scope="col">School</th>
-                </tr>
-            </thead>
-            <tbody>
-        </table>
+        <div id="results-display">
+            <table class="table table-striped table-dark">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Spell Name</th>
+                        <th scope="col">Classes</th>
+                        <th scope="col">School</th>
+                    </tr>
+                </thead>
+                <tbody>
+            </table>
+        </div>
 
     </div>
     <script src="javascript.js"></script>

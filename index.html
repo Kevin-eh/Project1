@@ -8,6 +8,12 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <title>Project 1</title>
     <style>
+        .school-name {
+            font-family: Helvetica, sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
         .spell-name {
             font-family: Helvetica, sans-serif;
             font-size: 12px;
@@ -17,11 +23,17 @@
         p {
             font-family: Helvetica, sans-serif;
             font-size: 12px;
+            margin: 0px;
         }
 
         h2 {
             font-family: Helvetica, sans-serif;
             font-weight: bold;
+        }
+
+        td {
+            margin: 1px;
+            padding: 0px;
         }
     </style>
 </head>
@@ -63,20 +75,23 @@
             <button>Spell List</button>
             <button>Class List</button>
         </div>
-        <div id="results-display">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Spell Name</th>
-                    </tr>
-                    <thead>
-                    <tbody>
-                    </tbody>
-
-            </table>
-
-        </div>
     </form>
+    <div id="results-display">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Spell Name</th>
+                    <th>Classes</th>
+                    <th>School</th>
+                </tr>
+                <thead>
+                <tbody>
+                </tbody>
+
+        </table>
+
+    </div>
 
 
     <script src="javascript.js">

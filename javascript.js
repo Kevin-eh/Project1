@@ -1,25 +1,69 @@
 //This gets the spell information
 
-var _stop;
-
 $(".query-option").on("click", function (event) {
     event.preventDefault();
     console.log($(this).attr("data-option"));
+});
+
+$("#spell-list").on("click", function (event) {
+    event.preventDefault();
+    $("#result-count").hide();
+    $(".spell-div").remove();
+    $(".school-div").remove();
+    $("table").show();
+    $("tbody").empty();
+    $.ajax({
+        url: "http://www.dnd5eapi.co/api/spells/",
+        method: "GET"
+    }).then(function (response) {
+        console.log(response);
+        for (let i = 0; i < response.results.length; i++) {
+
+            $.ajax({
+                url: response.results[i].url,
+                method: "GET",
+            }).then(function (response) {
+                var tr = $("<tr>");
+                var tdNum = $("<td>").append("<p><strong>" + (i + 1) + "</strong></p>");
+                var tdSpell = $("<td>").text(response.name).addClass("spell-name").attr("data-url", response.url);
+                var tdSchool = $("<td>").text(response.school.name).addClass("school-name").attr("data-url", response.school.url);
+                console.log(response.name)
+
+                //Holds all the classes for each spell in the table
+                var classLoop = [];
+
+                // This puts all the classes on the right place in the table inline
+                response.classes.forEach(element => {
+                    return classLoop.push(element.name);
+                });
+
+                var tdClasses = $("<td>").append("<p>" + classLoop.join(', ') + "</p>");
+                // var tdSchool = $("<td>").text(response.school.name).addClass("school-name").attr("data-url", response.school.url);
+
+                // console.log(response.results[i].url)
+
+                // $(tdSpell).text
+                $("tbody").append(tr);
+                $(tr).append(tdNum);
+                $(tr).append(tdSpell);
+                $(tr).append(tdClasses);
+                $(tr).append(tdSchool);
+            });
+        };
+    });
 });
 
 $("#submit-button").on("click", function (event) {
     event.preventDefault();
 
     // _stop = false;
-
-    index = 0;
-
+    $("#result-count").show();
     $(".spell-div").remove();
-
     $(".school-div").remove();
     $("table").show();
     $("tbody").empty();
 
+    var resultTotal = 0;
     var classSearch = $("#class-search").val().trim().split(' ').join('+');
     var querytype = $("option:selected").attr("data-option");
     var queryURL = "http://www.dnd5eapi.co/api/" + querytype + classSearch;
@@ -33,7 +77,9 @@ $("#submit-button").on("click", function (event) {
         url: queryURL,
         method: "GET"
     }).then(function (response) {
-        // console.log(response)
+
+        resultTotal = response.count;
+        $("#result-count").text("There are " + resultTotal + " spells for: " + classSearch.toString().charAt(0).toUpperCase() + classSearch.substring(1)).addClass("result-count");
 
         for (let i = 0; i < response.results.length; i++) {
             var searchTerm = JSON.stringify(response.results[i].name).trim().split(' ').join('+');
@@ -47,29 +93,33 @@ $("#submit-button").on("click", function (event) {
                         method: "GET"
                     }).then(function (response) {
                         // console.log(response);
-                        var spellDiv = $("<div>").addClass("spell-div");
+                        $("table").hide();
+                        var spellDiv = $("<div>").addClass("spell-div card");
+                        var cardBody = $("<div>").addClass("card-body")
+                        var backButton = $("<button>").addClass("btn btn-warning back-btn").text("X");
                         var classLoop = [];
                         response.classes.forEach(element => {
                             return classLoop.push(element.name);
                         });
 
                         $("#results-display").append(spellDiv);
-                        $(spellDiv).append("<h2>" + response.name + "</h2>");
-                        $(spellDiv).append("<p> Range: " + response.range + "</p>");
-                        $(spellDiv).append("<p> Components: " + response.components + "</p>");
-                        for (let i = 0; i < response.desc.length; i++) {
-                            $(spellDiv).append("<p>" + response.desc[i])
+                        $(spellDiv).append(cardBody);
+                        $(cardBody).append(backButton);
+                        $(cardBody).append("<h2>" + response.name + "</h2>").addClass("card-title");
+                        $(cardBody).append("<hr>");
+                        for (let k = 0; k < response.desc.length; k++) {
+                            $(cardBody).append("<p>" + response.desc[k].toString().replace(/[^\x00-\x7F]/g, "") + "</p><br>");
                         }
-                        // $(spellDiv).append("<p> Descriptions: " + response.desc + "</p>");
                         if (response.higher_level) {
-                            $(spellDiv).append("<p>" + response.higher_level + "</p>");
+                            $(cardBody).append("<p>" + response.higher_level + "</p>");
                         }
-                        if (response.ritual) {
-                            $(spellDiv).append("<p> Ritual: " + response.ritual + "</p>");
-                        }
-                        $(spellDiv).append("<p> Duration: " + response.duration + "</p>");
-                        $(spellDiv).append("<p> Casting Time: " + response.casting_time + "</p>");
-                        $(spellDiv).append("<p>" + classLoop.join(', ') + "</p>")
+                        $(cardBody).append("<p><strong>Range: </strong>" + response.range + "</p>").addClass("card-subtitle mb-2 text-muted");
+                        $(cardBody).append("<p><strong>Components: </strong>" + response.components + "</p>");
+                        $(cardBody).append("<p><strong>Level: </strong>" + response.level);
+                        $(cardBody).append("<p><strong>Ritual: </strong>" + response.ritual + "</p>");
+                        $(cardBody).append("<p><strong> Duration: </strong>" + response.duration + "</p>");
+                        $(cardBody).append("<p><strong>Casting Time: </strong>" + response.casting_time + "</p>");
+                        $(cardBody).append("<p>" + classLoop.join(', ') + "</p>").addClass("class-results")
                     });
                 }
 
@@ -122,8 +172,16 @@ $("#submit-button").on("click", function (event) {
     })
 });
 
+$(document).on("click", ".back-btn", function () {
+    $(".spell-div").hide()
+    $(".school-div").hide()
+    $("table").show();
+
+});
+
+
 $(document).on("click", ".spell-name", function () {
-    _stop = true;
+    $("#result-count").hide();
     $("table").hide()
     console.log($(this).attr("data-url"));
 
@@ -135,22 +193,31 @@ $(document).on("click", ".spell-name", function () {
         var spellDiv = $("<div>").addClass("spell-div card");
         var cardBody = $("<div>").addClass("card-body")
         var classLoop = [];
+        var editedString = response.desc
+        var backButton = $("<button>").addClass("btn btn-warning back-btn").text("X");
         response.classes.forEach(element => {
             return classLoop.push(element.name);
         });
+
         $("#results-display").append(spellDiv);
         $(spellDiv).append(cardBody);
-        $(cardBody).append("<h5>" + response.name + "</h5>").addClass("card-title");
-        $(cardBody).append("<p> Range: " + response.range + "</p>").addClass("card-subtitle mb-2 text-muted");
-        $(cardBody).append("<p> Components: " + response.components + "</p>");
-        $(cardBody).append("<p> Description: " + response.desc + "</p>");
+        $(cardBody).append(backButton);
+        $(cardBody).append("<h2>" + response.name + "</h2>").addClass("card-title");
+        $(cardBody).append("<hr>");
+        for (let k = 0; k < editedString.length; k++) {
+            $(cardBody).append("<p>" + editedString[k].toString().replace(/[^\x00-\x7F]/g, "") + "</p><br>");
+        }
         if (response.higher_level) {
             $(cardBody).append("<p>" + response.higher_level + "</p>");
         }
-        $(cardBody).append("<p> Ritual: " + response.ritual + "</p>");
-        $(cardBody).append("<p> Duration: " + response.duration + "</p>");
-        $(cardBody).append("<p> Casting Time: " + response.casting_time + "</p>");
-        $(cardBody).append("<p>" + classLoop.join(', ') + "</p>")
+        $(cardBody).append("<p><strong>Level: </strong>" + response.level);
+        $(cardBody).append("<p><strong> Range: </strong> " + response.range + "</p>").addClass("card-subtitle mb-2 text-muted");
+        $(cardBody).append("<p><strong> Components: </strong>" + response.components + "</p>");
+        $(cardBody).append("<p><strong> Ritual: </strong>" + response.ritual + "</p>");
+        $(cardBody).append("<p><strong>Duration: </strong>" + response.duration + "</p>");
+        $(cardBody).append("<p><strong>Casting Time: </strong>" + response.casting_time + "</p>");
+        $(cardBody).append("<br>");
+        $(cardBody).append("<h6>" + classLoop.join(', ') + "</h6>")
         console.log(classLoop);
 
     });
@@ -158,7 +225,7 @@ $(document).on("click", ".spell-name", function () {
 });
 
 $(document).on("click", ".school-name", function () {
-    _stop = true;
+    $("#result-count").hide();
     $("table").hide()
     console.log($(this).attr("data-url"));
 
@@ -167,10 +234,18 @@ $(document).on("click", ".school-name", function () {
         method: "GET"
     }).then(function (response) {
         console.log(response);
-        var schoolDiv = $("<div>").addClass("school-div");
+        var schoolDiv = $("<div>").addClass("school-div card");
+        var cardBody = $("<div>").addClass("card-body")
+        var backButton = $("<button>").addClass("btn btn-warning back-btn").text("X");
+
+
         $("#results-display").append(schoolDiv);
-        $(schoolDiv).append("<h2>" + response.name + "</h2>");
-        $(schoolDiv).append("<p> Description: " + response.desc + "</p>");
+        $(schoolDiv).append(cardBody);
+        $(cardBody).append(backButton);
+
+        $(cardBody).append("<h2>" + response.name + "</h2>");
+        $(cardBody).append("<hr>");
+        $(cardBody).append("<p>" + response.desc.toString().replace(/[^\x00-\x7F]/g, "") + "</p>");
     });
 
 

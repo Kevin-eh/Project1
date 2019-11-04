@@ -1,4 +1,4 @@
-$(document).on("click", "#add-roll", function() {
+$(document).on("click", "#add-roll", function () {
   event.preventDefault();
   // This line of code will grab the input from the textbox
   $("#rolls-appear-here").text("You actually have to input things you fool");
@@ -20,29 +20,41 @@ $(document).on("click", "#add-roll", function() {
   console.log(DiceVal);
   console.log(DiceValpre);
   // var GifFinder = $(this).attr("data-name");
-  var queryURL = "http://roll.diceapi.com/json/" + DiceNum + "d" + DiceVal;
+  var diceQueryURL = "http://roll.diceapi.com/json/" + DiceNum + "d" + DiceVal;
   $.ajax({
-    url: queryURL,
+    url: diceQueryURL,
     method: "GET"
-  }).then(function(response) {
+  }).then(function (response) {
     console.log(response);
     $("#rolls-view").empty();
-    // $("#GIF-view").append("<div>" + response.Title + "</div>");
-    // $("#DiceNum-input").val("");
-    // $("#DiceVal-input").val("");
-    // $("#mod-input").val("");
+    // $("#rolls-view").append("<p><strong> Total: </strong>" + total + "</p>");
+
+    var table = $("<table>").addClass("table table-dark")
+    var thead = $("<thead>").addClass("thead-dark");
+    var tbody = $("<tbody>")
+    // var td = $("<td>");
+    $("#rolls-view").append(table);
+    $(table).append(thead);
+    $(table).append(tbody);
+    $(thead).append("<td>Dice</td><td>Roll</td>");
 
     var results = response.dice;
     for (var i = 0; i < results.length; i++) {
       var rollDiv = $("<div>");
-      var p = $("<p>");
-      $(p).text("d" + DiceVal + " #" + (i + 1) + ": " + results[i].value);
+      var rollRow = $("<tr>");
+      var tdRoll = $("<td>d" + DiceVal + " #" + (i + 1) + "</td>");
+      var tdRollResult = $("<td>" + results[i].value + "</td>");
+
+
       total = total + results[i].value;
-      $(rollDiv).append(p);
+
+      $(rollRow).append(tdRoll);
+      $(rollRow).append(tdRollResult);
+      $(tbody).append(rollRow);
       $("#rolls-appear-here").append(rollDiv);
-      $("#modifier-here").text("Modifier: " + mod);
-      $("#total").text("Total: " + total);
     }
+    $("#rolls-view").prepend("<p><strong>Modifier: </strong>" + mod + " | <strong> Total: </strong>" + total + "</p><br>");
+    $("#rolls-view").prepend("<h1>Roll Results: </h1>");
   });
 });
 // The GIF from the textbox is then added to our array

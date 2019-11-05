@@ -29,6 +29,7 @@ $("#class-list").on("click", function (event) {
             }).then(function (response) {
                 console.log(response);
 
+
                 var classDiv = $("<div>").addClass("class-div card");
                 var cardBody = $("<div>").addClass("card-body")
                 var savingThrows = [];
@@ -55,9 +56,20 @@ $("#class-list").on("click", function (event) {
                 $(cardBody).append("<p> Hit Die: <strong>" + response.hit_die + "</strong></p>");
                 $(cardBody).append("<h6> Saving Throws: " + savingThrows.join(', ') + "</h6>");
                 $(cardBody).append("<br>");
+                $.ajax({
+                    url: response.subclasses[0].url,
+                    method: "GET"
+                }).then(function (response) {
+                    console.log(response);
+                    $(cardBody).append("<p><strong>" + response.name + "</strong> | <i>" + response.subclass_flavor + "</i>:</p>");
+                    for (let k = 0; k < response.desc.length; k++) {
+                        $(cardBody).append("<p style='font-weight: lighter'>" + response.desc[k].toString().replace(/[^\x00-\x7F]/g, "") + "</p><br>");
+                    }
+                });
                 $(cardBody).append("<p><strong>Proficiencies: </strong>" + proficiencies.join(', ') + "</p>");
                 $(cardBody).append("<br>");
                 $(cardBody).append("<h6> Skills: " + skills.join(', ') + "</h6>");
+                $(cardBody).append("<hr>");
 
 
                 // $(classDiv).append(backButton);

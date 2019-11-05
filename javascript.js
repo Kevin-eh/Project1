@@ -52,9 +52,11 @@ $("#class-list").on("click", function (event) {
                 $(classDiv).append(cardBody);
                 $(cardBody).append("<h2>" + response.name + "</h2>").addClass("card-title");
                 $(cardBody).append("<hr>");
-                $(cardBody).append("<h6> Hit Die:" + response.hit_die + "</h6>");
+                $(cardBody).append("<p> Hit Die: <strong>" + response.hit_die + "</strong></p>");
                 $(cardBody).append("<h6> Saving Throws: " + savingThrows.join(', ') + "</h6>");
+                $(cardBody).append("<br>");
                 $(cardBody).append("<p><strong>Proficiencies: </strong>" + proficiencies.join(', ') + "</p>");
+                $(cardBody).append("<br>");
                 $(cardBody).append("<h6> Skills: " + skills.join(', ') + "</h6>");
 
 

@@ -22,14 +22,6 @@ $("#class-list").on("click", function (event) {
         console.log(response);
 
         for (let i = 0; response.results.length; i++) {
-            // var classDiv = $("<div>").addClass("class-div card");
-            // var cardBody = $("<div>").addClass("card-body")
-            // var backButton = $("<button>").addClass("btn btn-warning back-btn").text("V");
-
-            // $("#results-display").append(classDiv);
-            // $(classDiv).append(cardBody);
-            // $(cardBody).append("<h2>" + response.results[i].name + "</h2>");
-            // $(classDiv).append(backButton);
 
             $.ajax({
                 url: response.results[i].url,
@@ -39,8 +31,6 @@ $("#class-list").on("click", function (event) {
 
                 var classDiv = $("<div>").addClass("class-div card");
                 var cardBody = $("<div>").addClass("card-body")
-                // var backButton = $("<button>").addClass("btn btn-warning back-btn").text("V");
-
                 var savingThrows = [];
                 var proficiencies = [];
                 var skills = [];
@@ -112,9 +102,6 @@ $("#spell-list").on("click", function (event) {
                 var tdClasses = $("<td>").append("<p>" + classLoop.join(', ') + "</p>");
                 // var tdSchool = $("<td>").text(response.school.name).addClass("school-name").attr("data-url", response.school.url);
 
-                // console.log(response.results[i].url)
-
-                // $(tdSpell).text
                 $(".search-table").append(tr);
                 $(tr).append(tdNum);
                 $(tr).append(tdSpell);
@@ -152,7 +139,7 @@ $("#submit-button").on("click", function (event) {
     }).then(function (response) {
 
         resultTotal = response.count;
-        $("#result-count").text("There are " + resultTotal + " spells for: " + classSearch.toString().charAt(0).toUpperCase() + classSearch.substring(1)).addClass("result-count");
+        $("#result-count").text("There are " + resultTotal + " spells for: " + (classSearch.toString().charAt(0).toUpperCase() + classSearch.substring(1)).split('+').join(' ')).addClass("result-count");
 
         for (let i = 0; i < response.results.length; i++) {
             var searchTerm = JSON.stringify(response.results[i].name).trim().split(' ').join('+');

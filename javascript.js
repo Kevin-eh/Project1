@@ -5,13 +5,85 @@ $(".query-option").on("click", function (event) {
     console.log($(this).attr("data-option"));
 });
 
+$("#class-list").on("click", function (event) {
+    event.preventDefault();
+
+    $("#result-count").hide();
+    $(".spell-div").remove();
+    $(".school-div").remove();
+    $(".class-div").remove();
+    $(".search-index").hide();
+    $(".search-table").empty();
+
+    $.ajax({
+        url: "http://www.dnd5eapi.co/api/classes/",
+        method: "GET"
+    }).then(function (response) {
+        console.log(response);
+
+        for (let i = 0; response.results.length; i++) {
+            // var classDiv = $("<div>").addClass("class-div card");
+            // var cardBody = $("<div>").addClass("card-body")
+            // var backButton = $("<button>").addClass("btn btn-warning back-btn").text("V");
+
+            // $("#results-display").append(classDiv);
+            // $(classDiv).append(cardBody);
+            // $(cardBody).append("<h2>" + response.results[i].name + "</h2>");
+            // $(classDiv).append(backButton);
+
+            $.ajax({
+                url: response.results[i].url,
+                method: "GET"
+            }).then(function (response) {
+                console.log(response);
+
+                var classDiv = $("<div>").addClass("class-div card");
+                var cardBody = $("<div>").addClass("card-body")
+                // var backButton = $("<button>").addClass("btn btn-warning back-btn").text("V");
+
+                var savingThrows = [];
+                var proficiencies = [];
+                var skills = [];
+
+                response.proficiency_choices[0].from.forEach(element => {
+                    return skills.push(element.name.toString().replace(/^Skill:+/i, ''));
+                });
+
+
+                response.proficiencies.forEach(element => {
+                    return proficiencies.push(element.name);
+                });
+
+                response.saving_throws.forEach(element => {
+                    return savingThrows.push(element.name);
+                });
+
+                $("#results-display").append(classDiv);
+                $(classDiv).append(cardBody);
+                $(cardBody).append("<h2>" + response.name + "</h2>").addClass("card-title");
+                $(cardBody).append("<hr>");
+                $(cardBody).append("<h6> Hit Die:" + response.hit_die + "</h6>");
+                $(cardBody).append("<h6> Saving Throws: " + savingThrows.join(', ') + "</h6>");
+                $(cardBody).append("<p><strong>Proficiencies: </strong>" + proficiencies.join(', ') + "</p>");
+                $(cardBody).append("<h6> Skills: " + skills.join(', ') + "</h6>");
+
+
+                // $(classDiv).append(backButton);
+            })
+        }
+    });
+
+
+});
+
 $("#spell-list").on("click", function (event) {
     event.preventDefault();
     $("#result-count").hide();
     $(".spell-div").remove();
     $(".school-div").remove();
-    $("table").show();
-    $("tbody").empty();
+    $(".class-div").remove();
+    $(".search-index").show();
+    $(".search-table").empty();
     $.ajax({
         url: "http://www.dnd5eapi.co/api/spells/",
         method: "GET"
@@ -43,7 +115,7 @@ $("#spell-list").on("click", function (event) {
                 // console.log(response.results[i].url)
 
                 // $(tdSpell).text
-                $("tbody").append(tr);
+                $(".search-table").append(tr);
                 $(tr).append(tdNum);
                 $(tr).append(tdSpell);
                 $(tr).append(tdClasses);
@@ -60,8 +132,9 @@ $("#submit-button").on("click", function (event) {
     $("#result-count").show();
     $(".spell-div").remove();
     $(".school-div").remove();
-    $("table").show();
-    $("tbody").empty();
+    $(".class-div").remove();
+    $(".search-index").show();
+    $(".search-table").empty();
 
     var resultTotal = 0;
     var classSearch = $("#class-search").val().trim().split(' ').join('+');
@@ -93,10 +166,10 @@ $("#submit-button").on("click", function (event) {
                         method: "GET"
                     }).then(function (response) {
                         // console.log(response);
-                        $("table").hide();
+                        $(".search-index").hide();
                         var spellDiv = $("<div>").addClass("spell-div card");
                         var cardBody = $("<div>").addClass("card-body")
-                        var backButton = $("<button>").addClass("btn btn-warning back-btn").text("X");
+                        // var backButton = $("<button>").addClass("btn btn-warning back-btn").text("X");
                         var classLoop = [];
                         response.classes.forEach(element => {
                             return classLoop.push(element.name);
@@ -104,7 +177,7 @@ $("#submit-button").on("click", function (event) {
 
                         $("#results-display").append(spellDiv);
                         $(spellDiv).append(cardBody);
-                        $(cardBody).append(backButton);
+                        // $(cardBody).append(backButton);
                         $(cardBody).append("<h2>" + response.name + "</h2>").addClass("card-title");
                         $(cardBody).append("<hr>");
                         for (let k = 0; k < response.desc.length; k++) {
@@ -119,7 +192,8 @@ $("#submit-button").on("click", function (event) {
                         $(cardBody).append("<p><strong>Ritual: </strong>" + response.ritual + "</p>");
                         $(cardBody).append("<p><strong> Duration: </strong>" + response.duration + "</p>");
                         $(cardBody).append("<p><strong>Casting Time: </strong>" + response.casting_time + "</p>");
-                        $(cardBody).append("<p>" + classLoop.join(', ') + "</p>").addClass("class-results")
+                        $(cardBody).append("<br>");
+                        $(cardBody).append("<h6>" + classLoop.join(', ') + "</h6>").addClass("class-results")
                     });
                 }
 
@@ -157,7 +231,7 @@ $("#submit-button").on("click", function (event) {
                             console.log(response.url)
 
                             $(tdSpell).text(response.name);
-                            $("tbody").append(tr);
+                            $(".search-table").append(tr);
                             $(tr).append(tdNum);
                             $(tr).append(tdSpell);
                             $(tr).append(tdClasses);
@@ -175,14 +249,15 @@ $("#submit-button").on("click", function (event) {
 $(document).on("click", ".back-btn", function () {
     $(".spell-div").hide()
     $(".school-div").hide()
-    $("table").show();
+    $(".class-div").hide();
+    $(".search-index").show();
 
 });
 
 
 $(document).on("click", ".spell-name", function () {
     $("#result-count").hide();
-    $("table").hide()
+    $(".search-index").hide()
     console.log($(this).attr("data-url"));
 
     $.ajax({
@@ -226,7 +301,7 @@ $(document).on("click", ".spell-name", function () {
 
 $(document).on("click", ".school-name", function () {
     $("#result-count").hide();
-    $("table").hide()
+    $(".search-index").hide()
     console.log($(this).attr("data-url"));
 
     $.ajax({

@@ -31,7 +31,7 @@ $(document).on("click", "#add-roll", function () {
 
     var table = $("<table>").addClass("table table-dark")
     var thead = $("<thead>").addClass("thead-dark");
-    var tbody = $("<tbody>")
+    var tbody = $("<tbody>");
     // var td = $("<td>");
     $("#rolls-view").append(table);
     $(table).append(thead);

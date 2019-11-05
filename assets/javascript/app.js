@@ -1,13 +1,29 @@
 $(document).on("click", "#add-roll", function () {
   event.preventDefault();
-  // This line of code will grab the input from the textbox
+  var DiceNum = $("#DiceNum-input")
+    .val()
+    .trim();
+  $("#dice-view").empty();
+  for (let i = 0; i < DiceNum; i++) {
+    $("#dice-view").append(
+      "<i class='fas fa-dice-d20 fa-3x' id='coverdice'></i> "
+    );
+  }
+
+  let myAnimation = anime({
+    targets: "#coverdice",
+    rotate: { value: 720 },
+    duration: 3000
+    /* describe the animation details */
+  }); // This line of code will grab the input from the textbox
+  myAnimation.restart;
+  document.querySelector("#add-roll").onclick = myAnimation.restart;
+
   $("#rolls-appear-here").text("You actually have to input things you fool");
   $("#modifier-here").empty();
   $("#total").empty();
   var total = 0;
-  var DiceNum = $("#DiceNum-input")
-    .val()
-    .trim();
+
   var DiceValpre = $("#DiceVal-input")
     .val()
     .trim();
@@ -19,6 +35,7 @@ $(document).on("click", "#add-roll", function () {
   $("#rolls-appear-here").empty();
   console.log(DiceVal);
   console.log(DiceValpre);
+
   // var GifFinder = $(this).attr("data-name");
   var diceQueryURL = "http://roll.diceapi.com/json/" + DiceNum + "d" + DiceVal;
   $.ajax({
@@ -37,6 +54,10 @@ $(document).on("click", "#add-roll", function () {
     $(table).append(thead);
     $(table).append(tbody);
     $(thead).append("<td>Dice</td><td>Roll</td>");
+    
+   myAnimation.repeat;
+    
+
 
     var results = response.dice;
     for (var i = 0; i < results.length; i++) {

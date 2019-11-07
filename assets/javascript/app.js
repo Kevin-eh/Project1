@@ -24,13 +24,13 @@ $(document).on("click", "#add-roll", function() {
 
       translateX: crazy_x,
       rotate: { value: 1080 },
-      duration: 2750
+      duration: 1500
     });
 
     let byebyedice = anime({
       targets: ".dicetodelete",
       opacity: 0,
-      delay: 3000,
+      delay: 1600,
       duration: 2000
     });
   }

@@ -1,22 +1,43 @@
 $(document).on("click", "#add-roll", function() {
   event.preventDefault();
-  console.log($(window).height());
+  // console.log($(window).height());
 
   var DiceNum = $("#DiceNum-input")
     .val()
     .trim();
   $(".dicetodelete").remove();
   for (let i = 0; i < DiceNum; i++) {
+    var p = document.getElementById("wrapper");
+    var style = p.currentStyle || window.getComputedStyle(p);
     var crazy_y = Math.floor(Math.random() * $(window).height()) - 100;
-    var crazy_x = Math.floor(Math.random() * $(window).width()) - 100;
-    console.log(crazy_x);
-    console.log(crazy_y);
+    var crazy_x =
+      Math.floor(Math.random() * $(window).width()) -
+      100 -
+      parseInt(style.marginLeft);
+    console.log("side: " + style.marginLeft);
+    // var crazy_yback = $(window).height() - crazy_y;
+    var crazy_xback = $(window).width() - crazy_x;
+    console.log("x " + crazy_x);
+    console.log("width: " + $(window).width());
+    console.log("back: " + crazy_xback);
     $("#wrapper").prepend(
       "<i class='fas fa-dice-d20 fa-3x dicetodelete' id='rollingdice" +
         i +
         "'></i> "
     );
-
+    // if (crazy_xback < 0) {
+    //   let rolldicebaby = anime({
+    //     targets: "#rollingdice" + i,
+    //     translateY: crazy_y,
+    //     easing: "easeOutBack",
+    //     keyframes: [
+    //       { translateX: $(window).width() },
+    //       { translateX: crazy_xback }
+    //     ],
+    //     rotate: { value: 1080 },
+    //     duration: 1500
+    //   });
+    // } else {
     let rolldicebaby = anime({
       targets: "#rollingdice" + i,
       translateY: crazy_y,

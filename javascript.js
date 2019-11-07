@@ -153,8 +153,12 @@ $("#submit-button").on("click", function (event) {
     }).then(function (response) {
 
         resultTotal = response.count;
-        $("#result-count").text("There are " + resultTotal + " spells for: " + (classSearch.toString().charAt(0).toUpperCase() + classSearch.substring(1)).split('+').join(' ')).addClass("result-count");
 
+        if (resultTotal > 1 || resultTotal < 1) {
+            $("#result-count").text("There are " + resultTotal + " spells for: " + (classSearch.toString().charAt(0).toUpperCase() + classSearch.substring(1)).split('+').join(' ')).addClass("result-count");
+        } else {
+            $("#result-count").text("There is " + resultTotal + " spell for: " + (classSearch.toString().charAt(0).toUpperCase() + classSearch.substring(1)).split('+').join(' ')).addClass("result-count");
+        }
         for (let i = 0; i < response.results.length; i++) {
             var searchTerm = JSON.stringify(response.results[i].name).trim().split(' ').join('+');
 
